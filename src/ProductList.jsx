@@ -9,7 +9,7 @@ const ProductList = (props) => {
               margin: "10px",
               border: "1px solid blue",
             }}
-            onClick={()=>props.selectProducts(data)}
+            onClick={()=>props.selectProducts({data})}
           >
             <p>Product ID: {data.id}</p>
             <p>Product Name: {data.name}</p>

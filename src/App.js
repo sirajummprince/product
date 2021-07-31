@@ -1,9 +1,10 @@
 import logo from "./logo.svg";
 import "./App.css";
 import ProductList from "./ProductList";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProductDetail from "./ProductDetail";
-
+import { Link, Route, Switch } from "react-router-dom";
+import Loader from "./Loader";
 function App() {
   const [products, setProducts] = useState([
     {
@@ -29,25 +30,50 @@ function App() {
     },
   ]);
 
-  const [currentProduct, setCurrentProduct] = useState([]);
+  const [currentProduct, setCurrentProduct] = useState();
+
+  const [loader, setLoader] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
+  }, []);
 
   const selectProducts = (details) => {
-    setCurrentProduct({ ...currentProduct, currentProduct: details });
+    setCurrentProduct(details);
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
   };
 
   const backToList = () => {
-    setCurrentProduct({ ...products, currentProduct: null });
+    setCurrentProduct(null);
+    setLoader(true);
+    setTimeout(() => {
+      setLoader(false);
+    }, 1000);
   };
 
   return (
     <div>
-      {currentProduct ? (
-        <ProductList products={products} selectProducts={selectProducts} />
+      {loader ? (
+        <Loader />
       ) : (
-        <ProductDetail
-          currentProduct={currentProduct}
-          backToList={backToList}
-        />
+        <>
+          <Link to="/">Home Page</Link>
+          <Link to="/ProductDetail">Product Details</Link>
+
+          {!currentProduct ? (
+            <ProductList products={products} selectProducts={selectProducts} />
+          ) : (
+            <ProductDetail
+              currentProduct={currentProduct}
+              backToList={backToList}
+            />
+          )}
+        </>
       )}
     </div>
   );
